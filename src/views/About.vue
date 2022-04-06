@@ -1,7 +1,3 @@
-<script setup>
-import ButtonRepo from '@/components/ButtonRepo.vue'
-</script>
-
 <template>
   <div class="bg-gray-50">
     <div
@@ -10,7 +6,7 @@ import ButtonRepo from '@/components/ButtonRepo.vue'
       <h2
         class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10"
       >
-        About Page
+        {{ app.title }}
         <br />
         <span class="text-indigo-600">Vite + Vue 3 + Tailwind CSS</span>
       </h2>
@@ -27,3 +23,12 @@ import ButtonRepo from '@/components/ButtonRepo.vue'
     </div>
   </div>
 </template>
+
+<script setup>
+import ButtonRepo from '@/components/ButtonRepo.vue'
+import { useAppStore } from "@/store/appStore"
+
+const app = useAppStore()
+app.title = '超市管理系统 - 关于'
+
+</script>

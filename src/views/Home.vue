@@ -1,7 +1,3 @@
-<script setup>
-import ButtonRepo from '@/components/ButtonRepo.vue'
-</script>
-
 <template>
   <div class="bg-gray-50">
     <div
@@ -10,7 +6,7 @@ import ButtonRepo from '@/components/ButtonRepo.vue'
       <h2
         class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10"
       >
-        Ready to dive in?
+        {{ app.title }}
         <br />
         <span class="text-indigo-600">Vite + Vue 3 + Tailwind CSS</span>
       </h2>
@@ -27,3 +23,13 @@ import ButtonRepo from '@/components/ButtonRepo.vue'
     </div>
   </div>
 </template>
+
+<script setup>
+import ButtonRepo from '@/components/ButtonRepo.vue'
+import { useAppStore } from "@/store/appStore"
+const app = useAppStore()
+console.log("app.setTitle", app.title)
+app.title = "超市会员系统 - 首页"
+console.log("app.setTitle", app.setTitle("首页"))
+// _app.setTitle("超市会员系统 - 首页")
+</script>
