@@ -1,16 +1,12 @@
 import { createApp } from 'vue'
 import './tailwind.css'
 import App from './App.vue'
-import { routes } from './routes.js'
+import router from './router'
 import { createRouter, createWebHistory } from 'vue-router'
 import { createPinia } from "pinia"
+import ElementPlus from 'element-plus'
 
 const app = createApp(App)
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes,
-})
-
-app.use(router).use(createPinia())
+app.use(createPinia()).use(router).use(ElementPlus)
 app.mount('#app')

@@ -10,7 +10,7 @@ export const useAppStore = defineStore('appStore', {
             // @ts-ignore
             title: '超市会员系统',
             // @ts-ignore
-            apiUrl: 'https://hzf.keker.ink',
+            apiUrl: 'https://cs.api.keker.ink',
         }),
         actions: {
             setTitle (title: string) {
