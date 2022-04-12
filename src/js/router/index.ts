@@ -1,14 +1,14 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router"
 import nprogress from "nprogress"
+import store from "@/js/store"
+
 import Home from '@/views/Home.vue'
-import pinia from "@/store";
-import {useAppStore} from "@/store/appStore";
-
-// pinia 调用声明
-const theApp = useAppStore(pinia)
-
 const About = () => import('@/views/About.vue')
 const NotFound = () => import('@/views/NotFound.vue')
+
+// 用户相关
+const Login = () => import('@/views/user/Login.vue')
+const SignUp = () => import('@/views/user/SignUp.vue')
 
 nprogress.configure({ showSpinner: false })
 
@@ -35,6 +35,22 @@ const routes: Array<RouteRecordRaw> = [
       roles: ["admin"]
     }
   },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+    meta: {
+      title: "登录",
+    }
+  },
+  {
+    path: "/signup",
+    name: "SignUp",
+    component: SignUp,
+    meta: {
+      title: "注册",
+    }
+  },
   // {
   //   path: '*',
   //   name: 'not-found',
@@ -55,9 +71,9 @@ const router = createRouter({
  * */
 const titleHandler = (to: any) => {
   if (to.meta.title) {
-      document.title = `${to.meta.title} - ${theApp.title}`
+      document.title = `${to.meta.title} - ${store.state.app.title}`
   } else {
-    document.title = `${theApp.title}`  //没有就默认
+    document.title = `${store.state.app.title}`  //没有就默认
   }
 }
 

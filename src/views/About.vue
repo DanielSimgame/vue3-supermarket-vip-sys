@@ -6,7 +6,7 @@
       <h2
         class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10"
       >
-        {{ app.title }}
+        {{ store.state.app.title }}
         <br />
         <span class="text-indigo-600">Vite + Vue 3 + Tailwind CSS</span>
       </h2>
@@ -26,9 +26,8 @@
 
 <script setup>
 import ButtonRepo from '@/components/ButtonRepo.vue'
-import { useAppStore } from "@/store/appStore"
+import {useStore} from "vuex"
 
-const app = useAppStore()
-app.title = '超市管理系统 - 关于'
+const store = useStore()
 
 </script>
