@@ -20,6 +20,7 @@ export default {
    */
   setUserInfo(state, payload) {
     state.userInfo = payload
+    state.isLoggedIn = true
     if (payload.role === 1) {
       state.userRole = 'admin'
     } else if (payload.role === 0) {
@@ -42,8 +43,6 @@ export default {
       gender: "",
       role: 0,
       portrait: "",
-      owndHouseIdList: [],
-      rentedHouseIdList: []
     }
   },
   /**

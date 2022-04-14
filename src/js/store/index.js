@@ -7,12 +7,12 @@ export default createStore({
   state: {
     app: {
       title: import.meta.env.VITE_APP_TITLE || '超市会员系统',
-      apiUrl: import.meta.env.VITE_API_URL || 'https://hzf.api.keker.icu',
+      apiUrl: import.meta.env.VITE_API_URL || 'https://cs.api.keker.tech',
       navigation: [
-        { name: '首页', href: '#', current: true },
-        { name: '积分商城', href: '#', current: false },
-        { name: '充值消费', href: '#', current: false },
-        { name: '每日签到', href: '#', current: false },
+        { name: '首页', path: '/', routerName: 'home', needLogin: false },
+        { name: '积分商城', path: '/credit', routerName: 'credit', needLogin: true },
+        { name: '充值消费', path: '/charge', routerName: 'charge', needLogin: true },
+        { name: '每日签到', path: '/signin', routerName: 'signin', needLogin: true },
       ]
     },
     userRole: '',
@@ -27,6 +27,7 @@ export default createStore({
       role: -1,
       portrait: "",
     },
+    isLoggedIn: false
   },
   getters,
   mutations,

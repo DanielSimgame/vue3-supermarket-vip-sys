@@ -3,9 +3,9 @@
     <div
         class="login-bg my-0 px-4 py-12 sm:px-6 lg:flex lg:items-center lg:justify-between lg:py-16 lg:px-8"
     >
-      <div class="lg:container h-80 relative">
-        <div class="login-container absolute right-2 top-30 w-96 h-80 bg-white p-6">
-          <el-tabs>
+      <div class="login-wrap overflow-hidden absolute md:right-0.5 lg:right-0  shadow-xl top-30 h-80 bg-white p-6">
+        <div class="login-content w-fit ml-10">
+          <el-tabs v-model="activeTab">
             <el-tab-pane label="账号密码登录" name="account"></el-tab-pane>
           </el-tabs>
           <el-form v-model="loginForm.value" label-width="60px">
@@ -27,14 +27,14 @@
                     effect="dark"
                     content="请先同意《用户协议》与《个人隐私条例》"
                     placement="bottom"
-                    :visible="loginBtnDisabled"
+                    :visible="!isEulaAgreed"
                 >
                   <el-button
                       type="primary"
                       size="large"
                       class="w-44"
                       @click="onLoginClick"
-                      :disabled="loginBtnDisabled"
+                      :disabled="!isEulaAgreed"
                       :loading="btnLoading"
                   >登录
                   </el-button>
@@ -44,7 +44,7 @@
             </el-form-item>
           </el-form>
           <div class="mt-12">
-            <el-checkbox v-model="isEulaAgreed" @change="onEulaChange">
+            <el-checkbox v-model="isEulaAgreed">
               我已阅读并同意
               <el-button
                   class="login__btn-eula"
@@ -69,23 +69,26 @@
       </div>
     </div>
   </div>
+  <!--    <div class="footer-container">-->
+  <!--      -->
+  <!--    </div>-->
 </template>
 
 <script setup>
 import {reactive, ref} from 'vue'
 import {useStore} from "vuex"
 import {useRouter} from "vue-router"
-import {postLogin, getUserInfo} from "@/js/Utilities/Requests"
+import {UsersApi} from "@/js/Requests"
 import Notification from "@/js/Utilities/Notification"
-import User from "@/js/Utilities/User"
+import User from "@/js/Utilities/UserStorages"
 
 const router = useRouter()
 const store = useStore()
 
+const activeTab = ref('account')
+
 let btnLoading = ref(false)
 let isEulaAgreed = ref(true)
-let loginBtnDisabled = ref(false)
-let eulaAgreed = ref(false)
 let loginForm = reactive({
   username: '',
   password: '',
@@ -106,11 +109,11 @@ const isValid = () => {
  * @function onLoginClick
  * @description 登录按钮点击事件
  * */
-const onLoginClick = async () => {
+const onLoginClick = () => {
   if (isValid()) {
     btnLoading.value = true
-    await postLogin(loginForm)
-        .then(r => {
+    UsersApi.postLogin(loginForm)
+        .then((r = {isLogin: false, isAdmin: false, token: ''}) => {
           btnLoading.value = false
           if (r.isLogin) {
             User.setToken(r.token)
@@ -119,26 +122,31 @@ const onLoginClick = async () => {
             } else {
               User.setRole('user')
             }
-            getUserInfo(r.token)
-                .then(r => {
-                  store.commit('setUserRole', r.role === 1 ? 'admin' : 'user')
-                  store.commit('setUserInfo', r)
-                  goHome()
-                })
+            return r.token
           } else {
-            Notification.Notify('请检查您的账号密码', {
-              title: '登录失败',
-              type: msgType.ERROR,
-            })
+            throw new Error('请检查您的账号密码是否正确')
           }
+        })
+        .then(token => {
+          if (token) {
+            return UsersApi.getUserInfo(token)
+          }
+        })
+        .then(r => {
+          store.commit('setUserRole', r.role === 1 ? 'admin' : 'user')
+          store.commit('setUserInfo', r)
+          return router.push('/')
+        })
+        .then(() => {
+          window.location.reload()
         })
         .catch(err => {
           console.log(err)
           btnLoading.value = false
-          Notification.Notify('登录失败！', {title: '错误', type: 'error'})
+          Notification.Notify(`登录失败！${err.message}`, {title: '错误', type: 'error'})
         })
   } else {
-    Notification.Notify('请检查您的账号密码', {
+    Notification.Notify('请检查您的账号密码是否正确', {
       title: '登录失败',
       type: 'error',
     })
@@ -150,15 +158,7 @@ const onLoginClick = async () => {
  * @description 注册按钮点击事件
  */
 const onSignupClick = () => {
-  router.push('/user/signup')
-}
-
-/**
- * @function onEulaChange
- * @description 同意用户协议按钮点击事件
- * */
-const onEulaChange = () => {
-  loginBtnDisabled.value = !eulaAgreed.value
+  router.push('/signup')
 }
 
 /**
@@ -188,13 +188,29 @@ const onPrivacyClick = () => {
   background-repeat: no-repeat;
 }
 
-.login-slogan-text {
-  font-weight: bold;
-  font-style: italic;
+.login-wrap {
+  min-width: 450px;
+  width: 35%;
+  /*animation: slideInRight-enter 0.5s ease-out;*/
+}
+
+.login-content {
+  animation: slideInRight-enter 0.5s ease-in-out;
 }
 
 .login-submit {
   display: flex !important;
   flex-direction: row;
+}
+
+@keyframes slideInRight-enter {
+  0% {
+    opacity: 0;
+    transform: translateX(200%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 </style>
