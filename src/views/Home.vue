@@ -9,7 +9,7 @@
             <div class="user-icon rounded-full shadow-lg mx-auto overflow-hidden border-white h-24 w-24">
               <img
                   v-if="pageData.isLoggedIn"
-                  :src="userInfo.portrait"
+                  :src="userProfile.portrait"
                   alt="User Icon"
               />
               <svg v-else class="animate-spin h-full w-full text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -19,10 +19,10 @@
             </div>
             <div class="user-name flex w-fit mx-auto mt-2">
               <h1 class="text-2xl text-center font-bold">
-                {{ userInfo.name || '信息加载中' }}
+                {{ userProfile.name || '信息加载中' }}
               </h1>
               <h2 class="border border-black rounded-lg p-1 mx-1" v-if="pageData.isLoggedIn">
-                {{ userInfo.role === 1 ? '管理员' : '会员' }}
+                {{ userProfile.role === 1 ? '管理员' : '会员' }}
               </h2>
             </div>
           </div>
@@ -30,22 +30,22 @@
           <div class="user-information block bg-white p-5 my-auto">
             <div class="px-6 h-12 border-b">我的钱包</div>
             <div class="px-6">
-              <ul class="flex justify-between overflow-hidden">
+              <ul class="flex justify-around overflow-hidden">
                 <li>
                   <div class="my-10 text-5xl font-bold">
-                    {{ pageData.isLoggedIn ? '10' : '加载中' }}
+                    {{ pageData.isLoggedIn ? userInfo.coupons.length : '加载中' }}
                   </div>
                   <span>优惠券</span>
                 </li>
                 <li>
                   <div class="my-10 text-5xl font-bold">
-                    {{ pageData.isLoggedIn ? '2050' : '加载中' }}
+                    {{ pageData.isLoggedIn ? userInfo.credits : '加载中' }}
                   </div>
                   <span>积分</span>
                 </li>
                 <li>
                   <div class="my-10 text-5xl font-bold">
-                    {{ pageData.isLoggedIn ? '3090' : '加载中' }}
+                    ¥ {{ pageData.isLoggedIn ? userInfo.balance : '加载中' }}
                   </div>
                   <span>余额</span>
                 </li>
@@ -61,16 +61,18 @@
 
 <script setup>
 import {useStore} from "vuex"
-import {reactive, watch} from "vue"
-import {Loading} from "@element-plus/icons-vue"
+import {useRouter} from "vue-router"
+import {onMounted, reactive, watch} from "vue"
+import {UserInfoApi} from "@/js/Requests"
 
 const store = useStore()
+const router = useRouter()
 
 let pageData = reactive({
   isLoggedIn: false,
 })
 
-let userInfo = reactive({
+let userProfile = reactive({
   name: "",
   email: "",
   detail: "",
@@ -82,15 +84,28 @@ let userInfo = reactive({
   id: ""
 })
 
+let userInfo = reactive({
+  balance: 0,
+  credits: 0,
+  coupons: []
+})
+
 watch(() => store.state.isLoggedIn, (newVal) => {
   pageData.isLoggedIn = newVal
 }, {immediate: true, deep: true})
 
+watch(() => store.state.userProfile, (newVal) => {
+  userProfile.name = newVal.name
+  userProfile.role = newVal.role
+  userProfile.portrait = newVal.portrait
+}, {immediate: true, deep: true})
+
 watch(() => store.state.userInfo, (newVal) => {
-  userInfo.name = newVal.name;
-  userInfo.role = newVal.role;
-  userInfo.portrait = newVal.portrait;
-}, {immediate: true, deep: true});
+  userInfo.balance = newVal.balance
+  userInfo.credits = newVal.credits
+  userInfo.coupons = newVal.coupons
+}, {immediate: true, deep: true})
+
 </script>
 
 <style scoped>

@@ -78,7 +78,7 @@
 import {reactive, ref} from 'vue'
 import {useStore} from "vuex"
 import {useRouter} from "vue-router"
-import {UsersApi} from "@/js/Requests"
+import {AccountApi} from "@/js/Requests"
 import Notification from "@/js/Utilities/Notification"
 import User from "@/js/Utilities/UserStorages"
 
@@ -112,7 +112,7 @@ const isValid = () => {
 const onLoginClick = () => {
   if (isValid()) {
     btnLoading.value = true
-    UsersApi.postLogin(loginForm)
+    AccountApi.postLogin(loginForm)
         .then((r = {isLogin: false, isAdmin: false, token: ''}) => {
           btnLoading.value = false
           if (r.isLogin) {
@@ -129,12 +129,12 @@ const onLoginClick = () => {
         })
         .then(token => {
           if (token) {
-            return UsersApi.getUserInfo(token)
+            return AccountApi.getUserInfo(token)
           }
         })
         .then(r => {
           store.commit('setUserRole', r.role === 1 ? 'admin' : 'user')
-          store.commit('setUserInfo', r)
+          store.commit('setUserProfile', r)
           return router.push('/')
         })
         .then(() => {

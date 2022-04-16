@@ -1,5 +1,5 @@
 /**
- * 此文件是Requests的子模块，负责管理用户信息相关API
+ * 此文件是Requests的子模块，负责管理账户相关API
  * */
 
 import Network from "@/js/basic/Network"

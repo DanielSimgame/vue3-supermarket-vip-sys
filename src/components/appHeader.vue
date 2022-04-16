@@ -1,20 +1,4 @@
 <template>
-  <!--<div class="block bg-white shadow flex flex-row px-10">
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <h1
-          class="text-3xl font-bold leading-tight text-gray-900"
-      >
-        {{ $route.meta.title }}
-      </h1>
-    </div>
-    <div class="user__container my-auto flex">
-      <el-avatar shape="square" size="large">
-        {{ userInfo.name !== "" ? userInfo.name.substring(0, 1) : "User" }}
-      </el-avatar>
-      <span class="mx-5 my-auto">UserName</span>
-
-    </div>
-  </div>-->
   <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
       <div class="relative flex items-center justify-between h-16">
@@ -151,7 +135,7 @@ watch(() => store.state.isLoggedIn, (newVal) => {
   pageData.isLoggedIn = newVal
 }, {immediate: true, deep: true})
 
-watch(() => store.state.userInfo, (newVal) => {
+watch(() => store.state.userProfile, (newVal) => {
   userInfo.name = newVal.name;
   userInfo.role = newVal.role;
   userInfo.portrait = newVal.portrait;

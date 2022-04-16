@@ -2,7 +2,7 @@
   <div>
     <AppHeader></AppHeader>
     <main>
-      <router-view />
+      <router-view/>
     </main>
   </div>
 </template>
@@ -12,7 +12,7 @@ import 'nprogress/nprogress.css'
 import AppHeader from "@/components/appHeader.vue"
 import {useStore} from "vuex"
 import {useRouter} from "vue-router"
-import {UsersApi} from "@/js/Requests";
+import {AccountApi, UserInfoApi} from "@/js/Requests"
 import User from "@/js/Utilities/UserStorages"
 import Notification from "@/js/Utilities/Notification"
 
@@ -29,14 +29,14 @@ const pageInitial = async () => {
   if (token) {
     // 如有token则先让用户以user权限访问，再向后端请求权限
     store.commit('setUserRole', 'user')
-    UsersApi.getUserInfo(token)
+    AccountApi.getUserInfo(token)
         .then(r => {
           store.commit('setUserRole', r.role === 1 ? 'admin' : 'user')
-          store.commit('setUserInfo', r)
+          store.commit('setUserProfile', r)
           User.setUserInfoInSession(r)
         })
         .catch(e => {
-          Notification.Notify('连接服务器失败，无法获取用户信息，请重新登录账号。', {
+          Notification.Notify(`连接服务器失败，无法获取用户信息，请重新登录账号。${e}`, {
             type: 'error',
             title: '出错',
             duration: 3000
@@ -46,6 +46,39 @@ const pageInitial = async () => {
           User.delUserInfoInSession();
           router.push("/login");
           window.location.reload();
+        })
+    UserInfoApi.getUserBalance()
+        .then(res => {
+          store.commit('setUserBalance', res)
+        })
+        .catch(err => {
+          Notification.Notify(`无法获取用户余额，请稍后重试。${err}`, {
+            type: 'error',
+            title: '出错',
+            duration: 3000
+          })
+        })
+    UserInfoApi.getUserCredit()
+        .then(res => {
+          store.commit('setUserCredits', res)
+        })
+        .catch(err => {
+          Notification.Notify(`无法获取用户积分，请稍后重试。${err}`, {
+            type: 'error',
+            title: '出错',
+            duration: 3000
+          })
+        })
+    UserInfoApi.getUserCoupon()
+        .then(res => {
+          store.commit('setUserCoupons', res)
+        })
+        .catch(err => {
+          Notification.Notify(`无法获取用户优惠券，请稍后重试。${err}`, {
+            type: 'error',
+            title: '出错',
+            duration: 3000
+          })
         })
   }
 }

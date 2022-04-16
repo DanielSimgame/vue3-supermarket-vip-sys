@@ -13,13 +13,13 @@ export default {
     state.userRole = role
   },
   /**
-   * @function setUserInfo
+   * @function setUserProfile
    * @description set user info
    * @param {Object} state vuex store state
    * @param {Object} payload user info object
    */
-  setUserInfo(state, payload) {
-    state.userInfo = payload
+  setUserProfile(state, payload) {
+    state.userProfile = payload
     state.isLoggedIn = true
     if (payload.role === 1) {
       state.userRole = 'admin'
@@ -28,12 +28,39 @@ export default {
     }
   },
   /**
+   * @function setUserBalance
+   * @description set user balance
+   * @param {Object} state vuex store state
+   * @param {Number} payload user balance
+   * */
+  setUserBalance(state, payload) {
+    state.userInfo.balance = payload
+  },
+  /**
+   * @function setUserCredits
+   * @description set user credits
+   * @param {Object} state vuex store state
+   * @param {Number} payload user credits
+   * */
+  setUserCredits(state, payload) {
+    state.userInfo.credits = payload
+  },
+  /**
+   * @function setUserCoupons
+   * @description set user coupons
+   * @param {Object} state vuex store state
+   * @param {Number} payload user coupons
+   * */
+  setUserCoupons(state, payload) {
+    state.userInfo.coupons = payload
+  },
+  /**
    * @function clearUserInfo
    * @description clear user info
    * @param {Object} state vuex store state
    */
   clearUserInfo(state) {
-    state.userInfo = {
+    state.userProfile = {
       id: "",
       name: "",
       email: "",
@@ -51,7 +78,7 @@ export default {
    * @param {Object} state vuex store state
    */
   setDefaultUserInfo(state) {
-    state.userInfo = {
+    state.userProfile = {
       id: '',
       email: '',
       firstName: '',

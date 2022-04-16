@@ -8,15 +8,23 @@ import {
   getEmailAvailability,
   getUserInfo,
   postSignUp
-} from '@/js/Utilities/RequestsUsers'
+} from '@/js/Utilities/RequestsAccount'
+
+import {getUserBalance, getUserCoupon, getUserCredit} from "@/js/Utilities/RequestsUser"
 
 /**
  * @const users
  * */
-export const UsersApi = {
+export const AccountApi = {
   postLogin,
   postSignUp,
   getPhoneAvailability,
   getEmailAvailability,
   getUserInfo
+}
+
+export const UserInfoApi = {
+  getUserBalance,
+  getUserCredit,
+  getUserCoupon
 }

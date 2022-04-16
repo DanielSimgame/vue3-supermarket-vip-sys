@@ -117,7 +117,7 @@
 import {ref, reactive} from "vue"
 import {useRouter} from "vue-router"
 import {useStore} from "vuex"
-import {UsersApi} from "@/js/Requests";
+import {AccountApi} from "@/js/Requests";
 import UserStorages from "@/js/Utilities/UserStorages"
 import Notification from "@/js/Utilities/Notification"
 
@@ -149,7 +149,7 @@ let eulaAgreed = ref(false)
  */
 const onInputPhoneBlur = async () => {
   const phone = signupForm.phone
-  UsersApi.getPhoneAvailability(phone)
+  AccountApi.getPhoneAvailability(phone)
       .then(res => {
         isPhoneAvailable.value = res.status === 200;
       })
@@ -160,7 +160,7 @@ const onInputPhoneBlur = async () => {
  */
 const onInputEmailBlur = () => {
   const email = signupForm.email
-  UsersApi.getEmailAvailability(email)
+  AccountApi.getEmailAvailability(email)
       .then(res => {
         isEmailAvailable.value = res.status === 200;
       })
@@ -182,17 +182,17 @@ const checkPassword = () => {
 const onSignupSubmit = async () => {
   loading.value = true
   signupForm.name = signupForm.username
-  await UsersApi.postSignUp(signupForm)
+  await AccountApi.postSignUp(signupForm)
       .then(r => {
         console.log(r)
         loading.value = false
         if (r.isLogin) {
           Notification.Notify('注册成功，正在跳转到主页面', {title: '注册成功', type: msgType.SUCCESS})
           UserStorages.setToken(r.token)
-          UsersApi.getUserInfo(r.token)
+          AccountApi.getUserInfo(r.token)
               .then(r => {
                 store.commit('setUserRole', r.role === 1 ? 'admin' : 'user')
-                store.commit('setUserInfo', r)
+                store.commit('setUserProfile', r)
                 router.push('/')
               })
         } else {

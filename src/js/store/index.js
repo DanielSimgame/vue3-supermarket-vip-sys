@@ -16,7 +16,7 @@ export default createStore({
       ]
     },
     userRole: '',
-    userInfo: {
+    userProfile: {
       id: "",
       name: "",
       email: "",
@@ -26,6 +26,11 @@ export default createStore({
       gender: "",
       role: -1,
       portrait: "",
+    },
+    userInfo: {
+      coupons: 0,
+      credits: 0,
+      balance: 0,
     },
     isLoggedIn: false
   },
