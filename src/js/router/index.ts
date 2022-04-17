@@ -13,6 +13,13 @@ const NotFound = () => import('@/views/NotFound.vue')
 const Login = () => import('@/views/user/Login.vue')
 const SignUp = () => import('@/views/user/SignUp.vue')
 
+// 积分相关
+const Credits = () => import('@/views/credits/index.vue')
+const SignIn = () => import('@/views/credits/SignIn.vue')
+
+// 充值相关
+const Recharge = () => import('@/views/recharge/index.vue')
+
 nprogress.configure({showSpinner: false})
 
 // const whiteList = ['/login', '/auth-redirect']
@@ -36,6 +43,33 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
             title: '关于',
             roles: ["admin"]
+        }
+    },
+    {
+        path: '/credits',
+        name: 'credits',
+        component: Credits,
+        meta: {
+            title: '积分商城',
+            roles: ["admin", "user"]
+        }
+    },
+    {
+        path: '/signin',
+        name: 'signin',
+        component: SignIn,
+        meta: {
+            title: '每日签到',
+            roles: ["admin", "user"]
+        }
+    },
+    {
+        path: '/recharge',
+        name: 'recharge',
+        component: Recharge,
+        meta: {
+            title: '余额充值',
+            roles: ["admin", "user"]
         }
     },
     {

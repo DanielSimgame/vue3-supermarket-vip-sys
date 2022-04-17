@@ -54,7 +54,7 @@
                   class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                 <span class="sr-only">用户菜单</span>
                 <!--                <el-avatar class="h-8 w-8" shape="circle" :src="userInfo.portrait" />-->
-                <img class="h-8 w-8 rounded-full" :src="userInfo.portrait" alt=""/>
+                <img class="h-8 w-8 rounded-full" :src="userProfile.portrait" alt=""/>
               </MenuButton>
               <div v-else class="guest">
                 <router-link to="/login">
@@ -70,9 +70,12 @@
                         leave-from-class="transform opacity-100 scale-100"
                         leave-to-class="transform opacity-0 scale-95">
               <MenuItems
-                  class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  class="origin-top-right z-40 absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <MenuItem v-slot="{ active }">
-                  <span :class="['block px-4 py-2 text-sm text-gray-700']">{{ userInfo.name }}</span>
+                  <span :class="['block px-4 py-2 text-sm text-gray-700']">{{ userProfile.name }}</span>
+                </MenuItem>
+                <MenuItem v-slot="{ active }" v-if="userProfile.role === 1">
+                  <a href="#" :class="[active ? 'bg-gray-100' : '', 'cursor-pointer block px-4 py-2 text-sm text-gray-700']">后台管理</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <a href="#" :class="[active ? 'bg-gray-100' : '', 'cursor-pointer block px-4 py-2 text-sm text-gray-700']">个人设置</a>
@@ -119,7 +122,7 @@ let pageData = reactive({
   isLoggedIn: false,
 })
 
-let userInfo = reactive({
+let userProfile = reactive({
   name: "",
   email: "",
   detail: "",
@@ -136,9 +139,9 @@ watch(() => store.state.isLoggedIn, (newVal) => {
 }, {immediate: true, deep: true})
 
 watch(() => store.state.userProfile, (newVal) => {
-  userInfo.name = newVal.name;
-  userInfo.role = newVal.role;
-  userInfo.portrait = newVal.portrait;
+  userProfile.name = newVal.name;
+  userProfile.role = newVal.role;
+  userProfile.portrait = newVal.portrait;
 }, {immediate: true, deep: true});
 /**
  * @function handleLogout

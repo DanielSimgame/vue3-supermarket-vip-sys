@@ -46,7 +46,7 @@ export const getUserCoupon = async () => {
   const reqUrl = `${store.getters.getApiServer}/coupon/查看`
   const res = await Network.fetchPost(reqUrl, { token: UserStorages.getToken()});
   if (res.status === 200) {
-    return res.text();
+    return res.json();
   } else {
     return Promise.reject(res);
   }

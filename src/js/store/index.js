@@ -10,8 +10,8 @@ export default createStore({
       apiUrl: import.meta.env.VITE_API_URL || 'https://cs.api.keker.tech',
       navigation: [
         { name: '首页', path: '/', routerName: 'home', needLogin: false },
-        { name: '积分商城', path: '/credit', routerName: 'credit', needLogin: true },
-        { name: '充值消费', path: '/charge', routerName: 'charge', needLogin: true },
+        { name: '积分商城', path: '/credits', routerName: 'credits', needLogin: true },
+        { name: '余额充值', path: '/recharge', routerName: 'recharge', needLogin: true },
         { name: '每日签到', path: '/signin', routerName: 'signin', needLogin: true },
       ]
     },

@@ -9,6 +9,7 @@
 
 <script setup>
 import 'nprogress/nprogress.css'
+import '@/assets/css/common.css'
 import AppHeader from "@/components/appHeader.vue"
 import {useStore} from "vuex"
 import {useRouter} from "vue-router"
