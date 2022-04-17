@@ -6,12 +6,60 @@
       </div>
     </div>
 
+    <div class="container mx-auto">
+      <div class="w-full h-64 flex flex-col justify-center items-center">
+        <h1 class="text-2xl font-black">{{ pageData.today }}</h1>
+        <h1 class="text-6xl font-black">{{ pageData.myCredit }}</h1>
+        <h1 class="text-2xl">当前积分</h1>
+        <el-button type="primary" class="mt-4" size="large" @click="onSignInClick">签到</el-button>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup>
 import bannerImg from '@/assets/images/banner_signin.png'
+import {UserInfoApi} from "@/js/Requests"
+import {reactive, watch} from "vue"
+import {useStore} from "vuex"
+import Notification from "@/js/Utilities/Notification"
 
+const store = useStore()
+const date = new Date()
+
+let pageData = reactive({
+  myCredit: 0,
+  today: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+})
+
+const onSignInClick = () => {
+  UserInfoApi.getUserSignIn()
+      .then(res => {
+        if (res.search('签到成功') === 0) {
+          store.commit('addUserCredits')
+          Notification.Notify('获得10积分',{
+            title: res,
+            type: 'success'
+          })
+        } else {
+          Notification.Notify(res,{
+            title: '出错了',
+            type: 'error'
+          })
+        }
+      })
+      .catch(err => {
+        Notification.Notify(err,{
+          title: '出错了',
+          type: 'error'
+        })
+      })
+}
+
+watch(() => store.state.userInfo, (newVal) => {
+  pageData.myCredit = newVal.credits
+},{ immediate: true, deep: true })
 </script>
 
 <style scoped>

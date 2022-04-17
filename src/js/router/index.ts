@@ -60,7 +60,7 @@ const routes: Array<RouteRecordRaw> = [
         component: SignIn,
         meta: {
             title: '每日签到',
-            roles: ["admin", "user"]
+            roles: ["user"]
         }
     },
     {

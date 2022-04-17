@@ -38,13 +38,21 @@
 
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <button
+          <el-badge
               v-if="pageData.isLoggedIn"
-              type="button"
-              class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-            <span class="sr-only">查看通知</span>
-            <BellIcon class="h-6 w-6" aria-hidden="true"/>
-          </button>
+              :value="pageData.notificationCount"
+              :max="10"
+              :hidden="pageData.notificationCount === 0"
+              class="item mr-5"
+              type="primary">
+            <button
+                v-if="pageData.isLoggedIn"
+                type="button"
+                class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+              <span class="sr-only">查看通知</span>
+              <BellIcon class="h-6 w-6" aria-hidden="true"/>
+            </button>
+          </el-badge>
 
           <!-- 个人资料下拉菜单 -->
           <Menu as="div" class="ml-3 relative">
@@ -120,6 +128,7 @@ const navigation = store.state.app.navigation
 
 let pageData = reactive({
   isLoggedIn: false,
+  notificationCount: 0,
 })
 
 let userProfile = reactive({

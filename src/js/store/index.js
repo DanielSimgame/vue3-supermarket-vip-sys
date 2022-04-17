@@ -7,7 +7,7 @@ export default createStore({
   state: {
     app: {
       title: import.meta.env.VITE_APP_TITLE || '超市会员系统',
-      apiUrl: import.meta.env.VITE_API_URL || 'https://cs.api.keker.tech',
+      apiUrl: import.meta.env.VITE_API_URL || 'https://cs.api.keker.icu',
       navigation: [
         { name: '首页', path: '/', routerName: 'home', needLogin: false },
         { name: '积分商城', path: '/credits', routerName: 'credits', needLogin: true },

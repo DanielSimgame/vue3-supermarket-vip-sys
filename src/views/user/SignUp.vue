@@ -187,7 +187,7 @@ const onSignupSubmit = async () => {
         console.log(r)
         loading.value = false
         if (r.isLogin) {
-          Notification.Notify('注册成功，正在跳转到主页面', {title: '注册成功', type: msgType.SUCCESS})
+          Notification.Notify('注册成功，正在跳转到主页面', {title: '注册成功', type: 'success'})
           UserStorages.setToken(r.token)
           AccountApi.getUserInfo(r.token)
               .then(r => {

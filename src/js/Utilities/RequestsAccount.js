@@ -59,7 +59,7 @@ export const getPhoneAvailability = async (phone)  => {
  * @returns {Promise<Boolean> | Promise<Error>} 是否可用
  */
 export const getEmailAvailability = async (email) => {
-  const reqUrl = `${store.getters.getApiServer}/user/isEmailAvailable?phone=${email}`
+  const reqUrl = `${store.getters.getApiServer}/user/isEmailAvailable?email=${email}`
   const res = await Network.fetchGet(reqUrl);
   if (res.status === 200) {
     return res;

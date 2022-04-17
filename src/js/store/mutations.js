@@ -55,6 +55,13 @@ export default {
     state.userInfo.coupons = payload
   },
   /**
+   * @function addUserCredits
+   * @description add user credits, step by 10
+   * */
+  addUserCredits(state) {
+    state.userInfo.credits += 10
+  },
+  /**
    * @function clearUserInfo
    * @description clear user info
    * @param {Object} state vuex store state
