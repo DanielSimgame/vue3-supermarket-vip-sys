@@ -61,7 +61,7 @@ const pageInitial = async () => {
         })
     UserInfoApi.getUserCredit()
         .then(res => {
-          store.commit('setUserCredits', res)
+          store.commit('setUserCredits', parseInt(res))
         })
         .catch(err => {
           Notification.Notify(`无法获取用户积分，请稍后重试。${err}`, {
