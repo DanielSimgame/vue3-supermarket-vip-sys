@@ -48,7 +48,7 @@ export default {
      * @description 使用fetch来向后端POST，需要提供API URL与要发送的JSON对象。
      * @param {string} url API的地址
      * @param {Object | null} headers 请求头
-     * @param {Object} data 要发送的JSON对象
+     * @param {Object | String} data 要发送的JSON对象
      * @param {Number} timeout 超时时间，默认为5000ms
      * */
     fetchPost: async (
@@ -67,6 +67,46 @@ export default {
             mode: ReqMode,
             body: JSON.stringify(data)
         }
+        const request = await fetch(url, options)
+
+        let resultPromise = Promise.race([request, abortPromise])
+        setTimeout(() => {
+            abort()
+        }, timeout)
+        return resultPromise.then(response => {
+            clearTimeout(timeout)
+            return response
+        })
+    },
+    /**
+     * @function fetchPostString
+     * @description 使用fetch来向后端POST字符串，需要提供API URL与要发送的JSON对象。
+     * @param {string} url API的地址
+     * @param {Object | null} headers 请求头
+     * @param {String} data 要发送的JSON对象
+     * @param {Number} timeout 超时时间，默认为5000ms
+     * */
+    fetchPostString: async (
+        url: string = '',
+        headers: object | null = null,
+        data: string = '',
+        timeout: number = 5000
+    ) => {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                ...headers
+            },
+            mode: ReqMode,
+            body: data
+        }
+
+        if (data === '') {
+            abort()
+        }
+
         const request = await fetch(url, options)
 
         let resultPromise = Promise.race([request, abortPromise])

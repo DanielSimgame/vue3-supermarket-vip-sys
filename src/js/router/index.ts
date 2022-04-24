@@ -8,6 +8,7 @@ import Home from '@/views/Home.vue'
 
 const About = () => import('@/views/About.vue')
 const NotFound = () => import('@/views/NotFound.vue')
+const Forbidden = () => import('@/views/Forbidden.vue')
 
 // 用户相关
 const Login = () => import('@/views/user/Login.vue')
@@ -88,6 +89,14 @@ const routes: Array<RouteRecordRaw> = [
             title: "注册",
         }
     },
+    {
+        path: "/403",
+        name: "Forbidden",
+        component: Forbidden,
+        meta: {
+            title: "403 无权访问",
+        }
+    },
     // {
     //   path: '*',
     //   name: 'not-found',
@@ -115,14 +124,66 @@ const titleHandler = (to: any) => {
 }
 
 // router guards
+// router.beforeEach(async (to, from, next) => {
+//     nprogress.start()
+//     // 检查用户角色
+//     const token = User.getToken()
+//     const requiredRoles: any = to.meta.roles
+//     const currentRole = store.getters.getUserRole
+//     if (currentRole === '' && whiteList.indexOf(to.path) === -1) {
+//         // 用户未登录，且页面不在 不重定向白名单 中，重定向到登录页
+//         titleHandler(to)
+//         next('/login')
+//     } else if (to.matched.length === 0) {
+//         // 用户已登录，路由不存在无法跳转，重定向到404页面
+//         titleHandler(to)
+//         next('/404')
+//     } else if ((currentRole === 'admin' || 'user') && requiredRoles && requiredRoles.indexOf(currentRole) === -1) {
+//         // 用户已登录，路由存在但无权限无法跳转，向后端请求查询用户身份再进行判断
+//         if (!token) {
+//             titleHandler(to)
+//             next('/login')
+//         } else {
+//             AccountApi.getUserInfo(token)
+//                 .then(res => {
+//                     if (res.role === 1) {
+//                         titleHandler(to)
+//                         next()
+//                     } else {
+//                         titleHandler(to)
+//                         next('/403')
+//                     }
+//                 })
+//                 .catch(err => {
+//                     titleHandler(to)
+//                     next('/403')
+//                 })
+//         }
+//     } else if (currentRole !== '' && redirectList.indexOf(to.path) !== -1) {
+//         // 用户已登录，不允许访问登录页和注册页
+//         titleHandler(to)
+//         next('/')
+//     } else {
+//         // 用户已登录，正常访问网页
+//         titleHandler(to)
+//         next()
+//     }
+// })
+
+// router guards
 router.beforeEach(async (to, from, next) => {
     nprogress.start()
     // 检查用户角色
     const token = User.getToken()
     const requiredRoles: any = to.meta.roles
-    const currentRole = store.getters.getUserRole
+    let currentRole = store.getters.getUserRole
+
+    // 后端未开放时直接next不做鉴权。
+    // next()
+
     if (currentRole === '' && whiteList.indexOf(to.path) === -1) {
         // 用户未登录，且页面不在 不重定向白名单 中，重定向到登录页
+        console.log('用户未登录，且页面不在 不重定向白名单 中，重定向到登录页')
         titleHandler(to)
         next('/login')
     } else if (to.matched.length === 0) {
@@ -132,12 +193,14 @@ router.beforeEach(async (to, from, next) => {
     } else if ((currentRole === 'admin' || 'user') && requiredRoles && requiredRoles.indexOf(currentRole) === -1) {
         // 用户已登录，路由存在但无权限无法跳转，向后端请求查询用户身份再进行判断
         if (!token) {
+            console.log('!token 用户已登录，路由存在但无权限无法跳转，向后端请求查询用户身份再进行判断')
             titleHandler(to)
             next('/login')
         } else {
-            AccountApi.getUserInfo(token)
+            await AccountApi.getUserInfo(token)
                 .then(res => {
-                    if (res.role === 1) {
+                    res.role === 1 ? currentRole = 'admin' : currentRole = 'user'
+                    if (requiredRoles.indexOf(currentRole) !== -1) {
                         titleHandler(to)
                         next()
                     } else {
@@ -146,6 +209,7 @@ router.beforeEach(async (to, from, next) => {
                     }
                 })
                 .catch(err => {
+                    console.log('router err', err)
                     titleHandler(to)
                     next('/403')
                 })
@@ -161,8 +225,9 @@ router.beforeEach(async (to, from, next) => {
     }
 })
 
+
 router.afterEach(() => {
     nprogress.done()
 })
 
-export default router;
+export default router

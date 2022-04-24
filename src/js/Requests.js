@@ -10,7 +10,13 @@ import {
   postSignUp
 } from '@/js/Utilities/RequestsAccount'
 
-import {getUserBalance, getUserCoupon, getUserCredit, getUserSignIn} from "@/js/Utilities/RequestsUser"
+import {
+  getUserBalance,
+  getUserCoupon,
+  getUserCredit,
+  getUserSignIn,
+  postUserRecharge
+} from "@/js/Utilities/RequestsUser"
 
 /**
  * @const users
@@ -27,5 +33,6 @@ export const UserInfoApi = {
   getUserBalance,
   getUserCredit,
   getUserCoupon,
-  getUserSignIn
+  getUserSignIn,
+  postUserRecharge
 }

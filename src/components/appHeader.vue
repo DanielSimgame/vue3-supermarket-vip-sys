@@ -24,7 +24,8 @@
           </div>
 
           <div class="hidden sm:block sm:ml-6">
-            <div class="flex space-x-4" v-if="pageData.isLoggedIn">
+            <div class="flex space-x-4">
+<!--            <div class="flex space-x-4" v-if="pageData.isLoggedIn">-->
               <router-link
                   v-for="item in navigation"
                   :key="item.name"
@@ -80,7 +81,7 @@
               <MenuItems
                   class="origin-top-right z-40 absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <MenuItem v-slot="{ active }">
-                  <span :class="['block px-4 py-2 text-sm text-gray-700']">{{ userProfile.name }}</span>
+                  <span :class="['block px-4 py-2 text-sm text-gray-700 cursor-default']">{{ userProfile.name }}</span>
                 </MenuItem>
                 <MenuItem v-slot="{ active }" v-if="userProfile.role === 1">
                   <a href="#" :class="[active ? 'bg-gray-100' : '', 'cursor-pointer block px-4 py-2 text-sm text-gray-700']">后台管理</a>
@@ -102,9 +103,18 @@
 
     <DisclosurePanel class="sm:hidden">
       <div class="px-2 pt-2 pb-3 space-y-1">
-        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href"
-                          :class="[$router.currentRoute.value.name === item.routerName ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'cursor-pointer block px-3 py-2 rounded-md text-base font-medium']"
-                          :aria-current="$router.currentRoute.value.name === item.routerName ? 'page' : undefined">{{ item.name }}
+        <DisclosureButton v-for="item in navigation"
+                          :key="item.name"
+                          :class="[$router.currentRoute.value.name ===
+                          item.routerName
+                          ? 'bg-gray-900 text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                           'cursor-pointer block px-3 py-2 rounded-md text-base font-medium']"
+                          :aria-current="$router.currentRoute.value.name === item.routerName ? 'page' : undefined">
+          <router-link
+              :to="item.path">
+            {{ item.name }}
+          </router-link>
         </DisclosureButton>
       </div>
     </DisclosurePanel>

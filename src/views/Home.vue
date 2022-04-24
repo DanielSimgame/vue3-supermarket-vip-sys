@@ -22,11 +22,11 @@
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
             </div>
-            <div class="user-name flex w-fit mx-auto mt-3">
+            <div class="user-name flex flex-col w-fit mx-auto mt-3">
               <h1 class="text-2xl text-center font-bold">
                 {{ userProfile.name || '信息加载中' }}
               </h1>
-              <h2 class="bg-white text-black rounded-lg py-1 px-3 mx-2" v-if="pageData.isLoggedIn">
+              <h2 class="bg-white w-fit text-black text-center rounded-lg py-1 px-3 mt-2 mx-auto" v-if="pageData.isLoggedIn">
                 {{ userProfile.role === 1 ? '管理员' : '会员' }}
               </h2>
             </div>

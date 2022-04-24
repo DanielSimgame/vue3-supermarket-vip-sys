@@ -64,3 +64,26 @@ export const getUserSignIn = async () => {
     return Promise.reject(res);
   }
 }
+
+/**
+ * @function postUserRecharge
+ * @description 用户充值
+ * @param {String} data 充值金额，双精度转字符串
+ * */
+export const postUserRecharge = async (data = 'money=0') => {
+  const reqUrl = `${store.getters.getApiServer}/user/recharge`
+
+  if (data === 'money=0') {
+    return Promise.reject({
+      status: 400,
+      statusText: '充值金额不能为0'
+    })
+  }
+
+  const res = await Network.fetchPostString(`${reqUrl}?money=${data}`, { token: UserStorages.getToken() });
+  if (res.status === 200 || res.status === 500) {
+    return res.text();
+  } else {
+    return Promise.reject(res);
+  }
+}
