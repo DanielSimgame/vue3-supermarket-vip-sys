@@ -98,7 +98,14 @@
     </div>
 
     <div class="w-full flex justify-center">
-      <el-button class="w-1/4" @click="onSubmitClick" type="primary">保存资料</el-button>
+      <el-button
+          class="w-1/4"
+          @click="onSubmitClick"
+          :loading="pageData.isBtnLoading"
+          type="primary"
+      >
+        保存资料
+      </el-button>
     </div>
 
   </div>
@@ -124,12 +131,14 @@ let userInfoForm = reactive({
   portrait: "",
   role: 0,
   username: "",
+  score: null
 })
 
 let pageData = reactive({
   changeFlag: false,
   usernameReadonly: "",
-  userIdReadonly: ""
+  userIdReadonly: "",
+  isBtnLoading: false
 })
 
 let fileData = null
@@ -189,6 +198,9 @@ const userInfoChange = () => {
           title: "网络繁忙"
         })
       })
+      .finally(() => {
+        pageData.isBtnLoading = false
+      })
 }
 
 // const onUploadClick = () => {
@@ -221,6 +233,7 @@ const userInfoChange = () => {
 const isFormValid = (form) => form.name && form.email && form.phone && form.gender && pageData.changeFlag
 
 const onSubmitClick = () => {
+  pageData.isBtnLoading = true
   isFormValid(userInfoForm) ? userInfoChange() : Notification.Notify(
       '请修改个人信息后再做提交，或者检查个人信息格式是否有误。',
       {
@@ -243,6 +256,14 @@ const applyUserInfo = (userInfo) => {
   userInfoForm.portrait = userInfo.portrait
   userInfoForm.role = userInfo.role
   userInfoForm.username = userInfo.username
+
+  // if user role isn't admin, then set userInfoForm.score to null
+  if (userInfo.role !== 1) {
+    userInfoForm.score = null
+  } else {
+    userInfoForm.score = userInfo.score
+  }
+
   pageData.usernameReadonly = userInfo.username
   pageData.userIdReadonly = userInfo.id
 }

@@ -60,7 +60,7 @@ export const deleteUser = async (id) => {
 
 /**
  * @function postCouponCreate
- * @description 创建优惠券，POST请求
+ * @description 创建优惠券，POST请求，成功返回优惠券ID
  * @param {Object} data 优惠券数据
  * */
 export const postCouponCreate = async (data) => {
@@ -69,9 +69,10 @@ export const postCouponCreate = async (data) => {
   if (data.name === '' || data.name === undefined) {
     return Promise.reject(new Error("请求参数不能为空"))
   }
-  const res = Network.fetchPost(reqUrl, {token: UserStorages.getToken()}, data);
+
+  const res = await Network.fetchPost(reqUrl, {token: UserStorages.getToken()}, data);
   if (res.status === 200) {
-    return res.json();
+    return res.text();
   } else {
     res.text()
       .then(text => {

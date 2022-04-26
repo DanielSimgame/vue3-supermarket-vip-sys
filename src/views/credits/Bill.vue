@@ -21,34 +21,36 @@
           </el-form-item>
           <el-form-item label="应付金额">
             <el-input
-                v-model="pageData.estimatedCost"
+                v-model="pageData.billForm.totalAmount"
                 @change="calcNewCost"
                 placeholder="请输入账单金额"
                 :min="1"
                 :max="10000"
             ></el-input>
           </el-form-item>
-          <el-form-item label="积分抵扣">
-            <el-tooltip
-                class="box-item"
-                effect="dark"
-                :content="pageData.creditsDisabledTooltip"
-                placement="right"
-                :visible="!pageData.creditsAvailable"
-            >
-              <el-checkbox
-                  v-model="pageData.useCredits"
-                  class="text-md"
-                  :disabled="!pageData.creditsAvailable"
-              >
-                使用
-                <span class="font-bold">{{ pageData.productCreditsLimit }}</span>
-                积分抵扣
-                <span class="font-bold text-red-500">10</span>
-                元
-              </el-checkbox>
-            </el-tooltip>
-          </el-form-item>
+
+<!--          <el-form-item label="积分抵扣">-->
+<!--            <el-tooltip-->
+<!--                class="box-item"-->
+<!--                effect="dark"-->
+<!--                :content="pageData.creditsDisabledTooltip"-->
+<!--                placement="right"-->
+<!--                :visible="!pageData.creditsAvailable"-->
+<!--            >-->
+<!--              <el-checkbox-->
+<!--                  v-model="pageData.useCredits"-->
+<!--                  class="text-md"-->
+<!--                  :disabled="!pageData.creditsAvailable"-->
+<!--              >-->
+<!--                使用-->
+<!--                <span class="font-bold">{{ pageData.productCreditsLimit }}</span>-->
+<!--                积分抵扣-->
+<!--                <span class="font-bold text-red-500">10</span>-->
+<!--                元-->
+<!--              </el-checkbox>-->
+<!--            </el-tooltip>-->
+<!--          </el-form-item>-->
+
           <el-form-item label="用券抵扣">
             <el-select
                 v-model="pageData.selectedCoupon"
@@ -78,7 +80,7 @@
           <el-form-item label="实付金额">
             <h1 class="text-2xl text-red-500">
               ¥
-              <span class="font-bold">{{ pageData.billForm.totalAmount }}</span>
+              <span class="font-bold">{{ pageData.estimatedCost }}</span>
               元
             </h1>
           </el-form-item>
@@ -131,18 +133,19 @@ import {useStore} from "vuex"
 
 const store = useStore()
 
+// estimated cost for display, billForm.totalAmount for submit, and billForm.totalAmount does not change
 let pageData = reactive({
-  productCreditsLimit: '100',
-  creditsAvailable: false,
-  creditsDisabledTooltip: '您的积分不足，无法抵扣',
+  // productCreditsLimit: '100',
+  // creditsAvailable: false,
+  // creditsDisabledTooltip: '您的积分不足，无法抵扣',
   isBillRequesting: false,
   isCouponRequesting: true,
   noCouponTip: '不使用优惠券',
   selectedCoupon: '',
-  useCredits: false,
+  // useCredits: false,
   useCoupon: false,
   userInfo: {
-    currentCredits: 0,
+    // currentCredits: 0,
     currentCoupons: [
       {
         description: "春日满100减10优惠券",
@@ -184,29 +187,42 @@ const billValidate = () => {
 
 /**
  * @function calcNewCost
- * @description 计算新的应付金额
- * */
+ * @description Calculate new estimatedCost for display, and it doesn't change billForm.totalAmount
+ */
 const calcNewCost = () => {
-  pageData.estimatedCost = parseFloat(pageData.estimatedCost)
+  pageData.estimatedCost = parseFloat(pageData.billForm.totalAmount)
 
   let discountAmount =
       pageData.userInfo.currentCoupons.find(item => item.id === pageData.selectedCoupon)
           ? pageData.userInfo.currentCoupons.find(item => item.id === pageData.selectedCoupon).discountAmount
           : 0
 
-  if (pageData.useCredits) {
-    if (pageData.useCoupon) {
-      pageData.billForm.totalAmount = pageData.estimatedCost - 10 - discountAmount
-    } else {
-      pageData.billForm.totalAmount = pageData.estimatedCost - 10
-    }
+  if (pageData.useCoupon) {
+    pageData.estimatedCost -= discountAmount
   } else {
-    if (pageData.useCoupon) {
-      pageData.billForm.totalAmount = pageData.estimatedCost - discountAmount
-    } else {
-      pageData.billForm.totalAmount = pageData.estimatedCost
-    }
+    pageData.estimatedCost = pageData.billForm.totalAmount
   }
+
+  // if (pageData.useCoupon) {
+  //   pageData.billForm.totalAmount = pageData.estimatedCost - discountAmount
+  // } else {
+  //   pageData.billForm.totalAmount = pageData.estimatedCost
+  // }
+
+  // 暂不开放积分抵扣
+  // if (pageData.useCredits) {
+  //   if (pageData.useCoupon) {
+  //     pageData.billForm.totalAmount = pageData.estimatedCost - 10 - discountAmount
+  //   } else {
+  //     pageData.billForm.totalAmount = pageData.estimatedCost - 10
+  //   }
+  // } else {
+  //   if (pageData.useCoupon) {
+  //     pageData.billForm.totalAmount = pageData.estimatedCost - discountAmount
+  //   } else {
+  //     pageData.billForm.totalAmount = pageData.estimatedCost
+  //   }
+  // }
 
   if (pageData.billForm.totalAmount < 0) {
     pageData.billForm.totalAmount = 0
@@ -234,17 +250,17 @@ const doCreateBill = () => {
         .then(res => {
           return Notification.Notify(res, {type: 'success', title: '成功'})
         })
-        .then(() => {
-          if (pageData.useCredits) {
-            return PurchaseApi.getUserCreditsUse(10)
-          }
-        })
-        .then(res => {
-          if (pageData.useCredits) {
-            console.log(res)
-            store.commit('minusUserCredits')
-          }
-        })
+        // .then(() => {
+        //   if (pageData.useCredits) {
+        //     return PurchaseApi.getUserCreditsUse(10)
+        //   }
+        // })
+        // .then(res => {
+        //   if (pageData.useCredits) {
+        //     console.log(res)
+        //     store.commit('minusUserCredits')
+        //   }
+        // })
         .catch(err => {
           console.log(err)
           Notification.Notify(err, {type: 'error', title: '失败'})
@@ -259,27 +275,27 @@ const doCreateBill = () => {
   }
 }
 
-watch(() => pageData.useCredits, () => {
-  calcNewCost()
-})
+// watch(() => pageData.useCredits, () => {
+//   calcNewCost()
+// })
 
 watch(() => pageData.selectedCoupon, (newVal) => {
   if (newVal !== '') {
     pageData.billForm.couponId = newVal
   }
-  calcNewCost()
+  // calcNewCost()
 })
 
 watch(() => store.state.userInfo, (newVal) => {
-  pageData.userInfo.currentCredits = newVal.credits
+  // pageData.userInfo.currentCredits = newVal.credits
   pageData.userInfo.currentCoupons = newVal.coupons
 
-  if (pageData.userInfo.currentCredits < 100) {
-    pageData.creditsAvailable = false
-    pageData.creditsDisabledTooltip = '您的积分不足，无法抵扣'
-  } else {
-    pageData.creditsAvailable = true
-  }
+  // if (pageData.userInfo.currentCredits < 100) {
+  //   pageData.creditsAvailable = false
+  //   pageData.creditsDisabledTooltip = '您的积分不足，无法抵扣'
+  // } else {
+  //   pageData.creditsAvailable = true
+  // }
 
   if (pageData.userInfo.currentCoupons.length > 0) {
     pageData.isCouponRequesting = false

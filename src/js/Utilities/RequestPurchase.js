@@ -53,13 +53,12 @@ export const postShowBill = async (pageNum, pageSize) => {
 }
 
 /**
- * @TODO 后端要将接口改为GET方式
- * @function getUserCreditsUse
- * @description 花费积分，GET请求
- * @param {Number} credits 使用的积分
+ * @function getCreditsExchangeCoupon
+ * @description 花费积分兑换优惠券，GET请求
+ * @param {Number} couponId 积分兑换的优惠券ID
  * */
-export const getUserCreditsUse = async (credits) => {
-  const reqUrl = `${store.getters.getApiServer}/user/scoreExchange?ConsumptionScore=${credits}`
+export const getCreditsExchangeCoupon = async (couponId) => {
+  const reqUrl = `${store.getters.getApiServer}/user/scoreExchange?couponId=${couponId}`
   const res = await Network.fetchPost(reqUrl, { token: UserStorages.getToken() });
   if (res.status === 200) {
     return res.text();

@@ -22,11 +22,11 @@ import {
   getUserSignIn,
   postUserRecharge,
   postUpdateUser,
-  getExchangeCoupon
+  getExchangeableCoupons
 } from "@/js/Utilities/RequestsUser"
 
 import {
-  getUserCreditsUse,
+  getCreditsExchangeCoupon,
   postCreateBill,
   postShowBill
 } from "@/js/Utilities/RequestPurchase"
@@ -65,13 +65,13 @@ export const UserInfoApi = {
   postUserRecharge,
   getNoticeList,
   postUpdateUser,
-  getExchangeCoupon
+  getExchangeableCoupons
 }
 
 export const PurchaseApi = {
   postCreateBill,
   postShowBill,
-  getUserCreditsUse
+  getCreditsExchangeCoupon
 }
 
 export const AdminApi = {

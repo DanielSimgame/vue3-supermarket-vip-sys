@@ -89,10 +89,10 @@ export const postUserRecharge = async (data = 'money=0') => {
 }
 
 /**
- * @function getExchangeCoupon
- * @description 积分兑换优惠券
+ * @function getExchangeCoupons
+ * @description 列出可以使用积分兑换的优惠券
  * */
-export const getExchangeCoupon = async () => {
+export const getExchangeableCoupons = async () => {
   const reqUrl = `${store.getters.getApiServer}/coupon/listTemplate`
 
   const res = await Network.fetchGet(reqUrl, { token: UserStorages.getToken() });

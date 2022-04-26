@@ -163,51 +163,52 @@ router.beforeEach(async (to, from, next) => {
     const requiredRoles: any = to.meta.roles
     let currentRole = store.getters.getUserRole
 
-    // 后端未开放时直接next不做鉴权。
-    next()
+    // 后端未开放时直接next不做鉴权，便于开发。
+    // next()
 
-    // if (currentRole === '' && whiteList.indexOf(to.path) === -1) {
-    //     // 用户未登录，且页面不在 不重定向白名单 中，重定向到登录页
-    //     console.log('用户未登录，且页面不在 不重定向白名单 中，重定向到登录页')
-    //     titleHandler(to)
-    //     next('/login')
-    // } else if (to.matched.length === 0) {
-    //     // 用户已登录，路由不存在无法跳转，重定向到404页面
-    //     titleHandler(to)
-    //     next('/404')
-    // } else if ((currentRole === 'admin' || 'user') && requiredRoles && requiredRoles.indexOf(currentRole) === -1) {
-    //     // 用户已登录，路由存在但无权限无法跳转，向后端请求查询用户身份再进行判断
-    //     if (!token) {
-    //         console.log('!token 用户已登录，路由存在但无权限无法跳转，向后端请求查询用户身份再进行判断')
-    //         titleHandler(to)
-    //         next('/login')
-    //     } else {
-    //         await AccountApi.getUserInfo(token)
-    //             .then(res => {
-    //                 res.role === 1 ? currentRole = 'admin' : currentRole = 'user'
-    //                 if (requiredRoles.indexOf(currentRole) !== -1) {
-    //                     titleHandler(to)
-    //                     next()
-    //                 } else {
-    //                     titleHandler(to)
-    //                     next('/403')
-    //                 }
-    //             })
-    //             .catch(err => {
-    //                 console.log('router err', err)
-    //                 titleHandler(to)
-    //                 next('/403')
-    //             })
-    //     }
-    // } else if (currentRole !== '' && redirectList.indexOf(to.path) !== -1) {
-    //     // 用户已登录，不允许访问登录页和注册页
-    //     titleHandler(to)
-    //     next('/')
-    // } else {
-    //     // 用户已登录，正常访问网页
-    //     titleHandler(to)
-    //     next()
-    // }
+    // 后端正常运作时需要进行鉴权。
+    if (currentRole === '' && whiteList.indexOf(to.path) === -1) {
+        // 用户未登录，且页面不在 不重定向白名单 中，重定向到登录页
+        console.log('用户未登录，且页面不在 不重定向白名单 中，重定向到登录页')
+        titleHandler(to)
+        next('/login')
+    } else if (to.matched.length === 0) {
+        // 用户已登录，路由不存在无法跳转，重定向到404页面
+        titleHandler(to)
+        next('/404')
+    } else if ((currentRole === 'admin' || 'user') && requiredRoles && requiredRoles.indexOf(currentRole) === -1) {
+        // 用户已登录，路由存在但无权限无法跳转，向后端请求查询用户身份再进行判断
+        if (!token) {
+            console.log('!token 用户已登录，路由存在但无权限无法跳转，向后端请求查询用户身份再进行判断')
+            titleHandler(to)
+            next('/login')
+        } else {
+            await AccountApi.getUserInfo(token)
+                .then(res => {
+                    res.role === 1 ? currentRole = 'admin' : currentRole = 'user'
+                    if (requiredRoles.indexOf(currentRole) !== -1) {
+                        titleHandler(to)
+                        next()
+                    } else {
+                        titleHandler(to)
+                        next('/403')
+                    }
+                })
+                .catch(err => {
+                    console.log('router err', err)
+                    titleHandler(to)
+                    next('/403')
+                })
+        }
+    } else if (currentRole !== '' && redirectList.indexOf(to.path) !== -1) {
+        // 用户已登录，不允许访问登录页和注册页
+        titleHandler(to)
+        next('/')
+    } else {
+        // 用户已登录，正常访问网页
+        titleHandler(to)
+        next()
+    }
 
 })
 

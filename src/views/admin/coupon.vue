@@ -77,7 +77,15 @@
         </el-collapse-transition>
       </el-form>
       <div class="text-center">
-        <el-button @click="onCouponSubmit" type="primary" size="large" class="px-5">创建优惠券</el-button>
+        <el-button
+            @click="onCouponSubmit"
+            :loading="pageData.isSubmitBtnLoading"
+            type="primary"
+            size="large"
+            class="px-5"
+        >
+          创建优惠券
+        </el-button>
       </div>
     </div>
 
@@ -101,7 +109,14 @@
             @Confirm="onCouponDelete"
         >
           <template #reference>
-            <el-button type="danger" size="large" class="px-5">删除优惠券</el-button>
+            <el-button
+                :loading="pageData.isDeleteBtnLoading"
+                type="danger"
+                size="large"
+                class="px-5"
+            >
+              删除优惠券
+            </el-button>
           </template>
         </el-popconfirm>
       </div>
@@ -123,6 +138,7 @@ let pageData = reactive({
   isSubmitBtnLoading: false,
   isDeleteBtnLoading: false,
   isForExactUser: false,
+  isSelectDateChange: false,
   selectedDate: tomorrow,
   newCoupon: {
     name: '',
@@ -177,6 +193,11 @@ const couponValidation = () => {
       return false
     }
   }
+
+  if (!pageData.isSelectDateChange) {
+    pageData.newCoupon.overdueTime = pageData.selectedDate
+  }
+
   return true
 }
 
@@ -185,21 +206,27 @@ const delCouponValidation = () => {
     Notification.Notify('请输入要删除的优惠券ID', {type: 'warning'})
     return false
   }
+  return true
 }
 
 const onCouponSubmit = () => {
+  pageData.isSubmitBtnLoading = true
   if (couponValidation()) {
     AdminApi.postCouponCreate(pageData.newCoupon)
         .then(res => {
-          Notification.Notify(res, {type: 'success', title: '创建优惠券成功'})
+          Notification.Notify(`优惠券ID：${res}`, {type: 'success', title: '创建优惠券成功'})
         })
         .catch(err => {
           Notification.Notify(err, {type: 'error', title: '创建优惠券失败'})
+        })
+        .finally(() => {
+          pageData.isSubmitBtnLoading = false
         })
   }
 }
 
 const onCouponDelete = () => {
+  pageData.isDeleteBtnLoading = true
   if (delCouponValidation()) {
     AdminApi.deleteCoupon(pageData.deleteCouponId)
         .then(res => {
@@ -210,12 +237,14 @@ const onCouponDelete = () => {
         })
         .finally(() => {
           pageData.deleteCouponId = null
+          pageData.isDeleteBtnLoading = false
         })
   }
 }
 
 watch(() => pageData.selectedDate, (newVal) => {
   pageData.newCoupon.overdueTime = new Date(newVal).getTime();
+  pageData.isSelectDateChange = true
 });
 </script>
 
