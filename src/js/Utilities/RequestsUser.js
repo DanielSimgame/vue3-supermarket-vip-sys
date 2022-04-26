@@ -89,6 +89,27 @@ export const postUserRecharge = async (data = 'money=0') => {
 }
 
 /**
+ * @function getExchangeCoupon
+ * @description 积分兑换优惠券
+ * */
+export const getExchangeCoupon = async () => {
+  const reqUrl = `${store.getters.getApiServer}/coupon/listTemplate`
+
+  const res = await Network.fetchGet(reqUrl, { token: UserStorages.getToken() });
+  if (res.status === 200) {
+    return res.json();
+  } else {
+    res.text()
+      .then(text => {
+        if (text !== undefined) {
+          text = text.toString()
+          return Promise.reject(new Error(text));
+        }
+      })
+  }
+}
+
+/**
  * @function getNoticeList
  * @description 获取公告列表
  * @param {Number} pageNum 页码

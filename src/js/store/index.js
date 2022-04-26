@@ -15,6 +15,7 @@ export default createStore({
         { name: '首页', path: '/', routerName: 'home', needLogin: false },
         { name: '消费', path: '/credits', routerName: 'credits', needLogin: true },
         { name: '余额充值', path: '/recharge', routerName: 'recharge', needLogin: true },
+        { name: '积分兑换', path: '/exchange', routerName: 'exchange', needLogin: true },
         { name: '每日签到', path: '/signin', routerName: 'signin', needLogin: true },
       ]
     },

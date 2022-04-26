@@ -21,7 +21,8 @@ import {
   getUserCredit,
   getUserSignIn,
   postUserRecharge,
-  postUpdateUser
+  postUpdateUser,
+  getExchangeCoupon
 } from "@/js/Utilities/RequestsUser"
 
 import {
@@ -34,12 +35,12 @@ import {
   getActivityPush,
   deleteUser,
   postCouponCreate,
-  postUpdateUserAdmin
+  postUpdateUserAdmin, deleteCoupon
 } from "@/js/Utilities/RequestAdmin"
 
-import {
-  postImage
-} from "@/js/Utilities/RequestFiles"
+// import {
+//   postImage
+// } from "@/js/Utilities/RequestFiles"
 
 /**
  * Exports
@@ -63,7 +64,8 @@ export const UserInfoApi = {
   getUserSignIn,
   postUserRecharge,
   getNoticeList,
-  postUpdateUser
+  postUpdateUser,
+  getExchangeCoupon
 }
 
 export const PurchaseApi = {
@@ -76,9 +78,10 @@ export const AdminApi = {
   getActivityPush,
   deleteUser,
   postCouponCreate,
-  postUpdateUserAdmin
+  postUpdateUserAdmin,
+  deleteCoupon
 }
 
-export const FilesApi = {
-  postImage
-}
+// export const FilesApi = {
+//   postImage
+// }

@@ -8,7 +8,7 @@
           <el-input
               v-model="pageData.newCoupon.name"
               :minlength="1"
-              :maxlength="8"
+              :maxlength="50"
               show-word-limit
               placeholder="优惠券名称不宜过长"
           ></el-input>
@@ -17,7 +17,7 @@
           <el-input
               v-model="pageData.newCoupon.description"
               :minlength="1"
-              :maxlength="20"
+              :maxlength="100"
               show-word-limit
               placeholder="优惠券描述，如满100减10"
           ></el-input>
@@ -201,7 +201,16 @@ const onCouponSubmit = () => {
 
 const onCouponDelete = () => {
   if (delCouponValidation()) {
-    console.log('delete coupon')
+    AdminApi.deleteCoupon(pageData.deleteCouponId)
+        .then(res => {
+          Notification.Notify(res, {type: 'success', title: '删除优惠券成功'})
+        })
+        .catch(err => {
+          Notification.Notify(err, {type: 'error', title: '删除优惠券失败'})
+        })
+        .finally(() => {
+          pageData.deleteCouponId = null
+        })
   }
 }
 

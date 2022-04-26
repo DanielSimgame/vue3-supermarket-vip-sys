@@ -18,7 +18,7 @@ export const getActivityPush = async (content) => {
     return Promise.reject(new Error("请求参数不能为空"))
   }
 
-  const res = await Network.fetchGet(reqUrl, { token: UserStorages.getToken() });
+  const res = await Network.fetchGet(reqUrl, {token: UserStorages.getToken()});
   if (res.status === 200) {
     return res.text();
   } else {
@@ -44,7 +44,7 @@ export const deleteUser = async (id) => {
     return Promise.reject(new Error("请求参数不能为空"))
   }
 
-  const res = await Network.fetchDel(reqUrl, { token: UserStorages.getToken() });
+  const res = await Network.fetchDel(reqUrl, {token: UserStorages.getToken()});
   if (res.status === 200) {
     return res.text();
   } else {
@@ -69,7 +69,7 @@ export const postCouponCreate = async (data) => {
   if (data.name === '' || data.name === undefined) {
     return Promise.reject(new Error("请求参数不能为空"))
   }
-  const res = Network.fetchPost(reqUrl,{ token: UserStorages.getToken() }, data);
+  const res = Network.fetchPost(reqUrl, {token: UserStorages.getToken()}, data);
   if (res.status === 200) {
     return res.json();
   } else {
@@ -100,7 +100,7 @@ export const postCouponCreate = async (data) => {
  *   score: 0
  * }
  * */
-export const postUpdateUserAdmin = async (data= {
+export const postUpdateUserAdmin = async (data = {
   detail: "",
   email: "",
   gender: "",
@@ -118,10 +118,36 @@ export const postUpdateUserAdmin = async (data= {
     return Promise.reject(new Error("请求参数不能为空"))
   }
 
-  const res = await Network.fetchPost(reqUrl, { token: UserStorages.getToken() }, data);
+  const res = await Network.fetchPost(reqUrl, {token: UserStorages.getToken()}, data);
 
   if (res.status === 200) {
     return res.json();
+  } else {
+    res.text()
+      .then(text => {
+        if (text !== undefined) {
+          text = text.toString()
+          return Promise.reject(new Error(text));
+        }
+      })
+  }
+}
+
+/**
+ * @function deleteCoupon
+ * @description 删除优惠券，DELETE请求
+ * @param {string} couponId 优惠券ID
+ * */
+export const deleteCoupon = async (couponId) => {
+  const reqUrl = `${store.getters.getApiServer}/coupon/delete?couponId=${couponId}`
+
+  if (couponId === '' || couponId === undefined) {
+    return Promise.reject(new Error("请求参数不能为空"))
+  }
+
+  const res = await Network.fetchDel(reqUrl, {token: UserStorages.getToken()});
+  if (res.status === 200) {
+    return res.text();
   } else {
     res.text()
       .then(text => {

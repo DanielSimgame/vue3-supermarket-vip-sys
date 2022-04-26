@@ -100,11 +100,19 @@
       <div class="history-bills col-span-1">
         <h1 class="text-center text-2xl my-5">历史消费账单</h1>
         <div>
-          <el-table :data="pageData.myHistoryBills" stripe style="width: 100%" max-height="360" empty-text="无账单数据">
+          <el-table
+              :data="pageData.myHistoryBills"
+              show-summary
+              stripe
+              style="width: 100%"
+              max-height="320"
+              sum-text="合计金额(¥)"
+              empty-text="无账单数据"
+          >
+            <el-table-column prop="description" label="账单描述" fixed="left" width="180"/>
             <el-table-column prop="createDate" label="创建日期" width="180"/>
-            <el-table-column prop="description" label="账单描述" width="180"/>
-            <el-table-column prop="discountAmount" label="折扣"/>
-            <el-table-column prop="totalAmount" label="实付金额"/>
+            <el-table-column prop="discountAmount" sortable label="用券折扣(¥)"/>
+            <el-table-column prop="totalAmount" sortable label="实付金额(¥)"/>
           </el-table>
         </div>
       </div>
@@ -157,7 +165,7 @@ let pageData = reactive({
 })
 
 const useCoupon = () => {
-  pageData.useCoupon = true
+  pageData.useCoupon = pageData.selectedCoupon !== '';
   calcNewCost()
 }
 
@@ -182,8 +190,8 @@ const calcNewCost = () => {
   pageData.estimatedCost = parseFloat(pageData.estimatedCost)
 
   let discountAmount =
-      pageData.userInfo.currentCoupons.find(item => item.couponId === pageData.selectedCoupon)
-          ? pageData.userInfo.currentCoupons.find(item => item.couponId === pageData.selectedCoupon).discountAmount
+      pageData.userInfo.currentCoupons.find(item => item.id === pageData.selectedCoupon)
+          ? pageData.userInfo.currentCoupons.find(item => item.id === pageData.selectedCoupon).discountAmount
           : 0
 
   if (pageData.useCredits) {
@@ -256,7 +264,10 @@ watch(() => pageData.useCredits, () => {
 })
 
 watch(() => pageData.selectedCoupon, (newVal) => {
-  console.log(newVal)
+  if (newVal !== '') {
+    pageData.billForm.couponId = newVal
+  }
+  calcNewCost()
 })
 
 watch(() => store.state.userInfo, (newVal) => {

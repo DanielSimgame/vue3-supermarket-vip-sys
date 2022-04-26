@@ -1,10 +1,10 @@
 <template>
-  <div class="events-container px-5">
+  <div class="events-container overflow-y-scroll px-5">
     <h1 class="text-2xl italic mb-5">活动信息推送</h1>
     <el-input
         v-model="pageData.activityDesc"
         type="textarea"
-        :autosize="{minRows: 5, maxRows: 10}"
+        :autosize="{minRows: 10, maxRows: 20}"
         autofocus
         size="large"
         placeholder="请输入推送的活动通知内容"
@@ -52,5 +52,7 @@ const onActivitySubmit = () => {
 </script>
 
 <style scoped>
-
+.events-container {
+  height: 700px;
+}
 </style>

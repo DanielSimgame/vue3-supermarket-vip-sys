@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto py-10">
-    <el-tabs tab-position="left" style="height: 700px" class="demo-tabs">
+    <el-tabs tab-position="left" style="height: 700px">
       <el-tab-pane label="优惠券">
         <Coupon></Coupon>
       </el-tab-pane>

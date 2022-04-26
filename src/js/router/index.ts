@@ -18,6 +18,7 @@ const MyProfile = () => import('@/views/user/MyProfile.vue')
 // 积分相关
 const Credits = () => import('@/views/credits/Bill.vue')
 const SignIn = () => import('@/views/credits/SignIn.vue')
+const Exchange = () => import('@/views/credits/Exchange.vue')
 
 // 充值相关
 const Recharge = () => import('@/views/recharge/index.vue')
@@ -66,6 +67,15 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
             title: '每日签到',
             roles: ["user"]
+        }
+    },
+    {
+        path: '/exchange',
+        name: 'exchange',
+        component: Exchange,
+        meta: {
+            title: '积分兑换',
+            roles: ["admin", "user"]
         }
     },
     {
