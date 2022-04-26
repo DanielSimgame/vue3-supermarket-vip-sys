@@ -141,9 +141,8 @@ const onLoginClick = () => {
           window.location.reload()
         })
         .catch(err => {
-          console.log(err)
           btnLoading.value = false
-          Notification.Notify(`登录失败！${err.message}`, {title: '错误', type: 'error'})
+          Notification.Notify(`登录失败！${err}`, {title: '错误', type: 'error'})
         })
   } else {
     Notification.Notify('请检查您的账号密码是否正确', {

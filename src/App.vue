@@ -4,6 +4,16 @@
     <main>
       <router-view/>
     </main>
+    <el-dialog
+        v-model="store.state.app.dialogVisibility.notification"
+        title="通知"
+        width="800px"
+        :modal="true"
+        draggable
+        destroy-on-close
+    >
+      <Notice></Notice>
+    </el-dialog>
   </div>
 </template>
 
@@ -13,9 +23,10 @@ import '@/assets/css/common.css'
 import AppHeader from "@/components/appHeader.vue"
 import {useStore} from "vuex"
 import {useRouter} from "vue-router"
-import {AccountApi, UserInfoApi} from "@/js/Requests"
+import {AccountApi, PurchaseApi, UserInfoApi} from "@/js/Requests"
 import User from "@/js/Utilities/UserStorages"
 import Notification from "@/js/Utilities/Notification"
+import Notice from "@/views/Notice.vue";
 
 const store = useStore()
 const router = useRouter()
@@ -76,6 +87,17 @@ const pageInitial = async () => {
         })
         .catch(err => {
           Notification.Notify(`无法获取用户优惠券，请稍后重试。${err}`, {
+            type: 'error',
+            title: '出错',
+            duration: 3000
+          })
+        })
+    PurchaseApi.postShowBill(0, 10)
+        .then(res => {
+          store.commit('setUserBills', res)
+        })
+        .catch(err => {
+          Notification.Notify(`无法获取用户账单，请稍后重试。${err}`, {
             type: 'error',
             title: '出错',
             duration: 3000

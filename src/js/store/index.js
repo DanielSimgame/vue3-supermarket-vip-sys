@@ -8,9 +8,12 @@ export default createStore({
     app: {
       title: import.meta.env.VITE_APP_TITLE || '超市会员系统',
       apiUrl: import.meta.env.VITE_API_URL || 'https://cs.api.keker.icu',
+      dialogVisibility: {
+        notification: false,
+      },
       navigation: [
         { name: '首页', path: '/', routerName: 'home', needLogin: false },
-        { name: '积分商城', path: '/credits', routerName: 'credits', needLogin: true },
+        { name: '消费', path: '/credits', routerName: 'credits', needLogin: true },
         { name: '余额充值', path: '/recharge', routerName: 'recharge', needLogin: true },
         { name: '每日签到', path: '/signin', routerName: 'signin', needLogin: true },
       ]
@@ -28,10 +31,11 @@ export default createStore({
       portrait: "",
     },
     userInfo: {
-      coupons: 0,
+      coupons: [],
       credits: 0,
       balance: 0,
     },
+    userBills: [],
     isLoggedIn: false
   },
   getters,

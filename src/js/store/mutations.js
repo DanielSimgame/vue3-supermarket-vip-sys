@@ -62,6 +62,16 @@ export default {
     state.userInfo.credits += 10
   },
   /**
+   * @function minusUserCredits
+   * @description add user credits, step by 10
+   * */
+  minusUserCredits(state) {
+    state.userInfo.credits >= 10 ? state.userInfo.credits -= 10 : state.userInfo.credits = 0
+  },
+  setUserBills(state, payload) {
+    state.userBills = payload
+  },
+  /**
    * @function clearUserInfo
    * @description clear user info
    * @param {Object} state vuex store state

@@ -4,7 +4,7 @@
 
 import Network from "@/js/basic/Network"
 import store from "@/js/store"
-import UserStorages from "@/js/Utilities/UserStorages";
+import UserStorages from "@/js/Utilities/UserStorages"
 
 
 /**
@@ -85,5 +85,67 @@ export const postUserRecharge = async (data = 'money=0') => {
     return res.text();
   } else {
     return Promise.reject(res);
+  }
+}
+
+/**
+ * @function getNoticeList
+ * @description 获取公告列表
+ * @param {Number} pageNum 页码
+ * @param {Number} pageSize 每页数量
+ * */
+export const getNoticeList = async (pageNum = 0, pageSize = 10) => {
+  const reqUrl = `${store.getters.getApiServer}/notice/list?pageNum=${pageNum}&pageSize=${pageSize}`
+
+  const res = await Network.fetchGet(reqUrl, { token: UserStorages.getToken() });
+  if (res.status === 200) {
+    return res.json();
+  } else {
+    return Promise.reject(res);
+  }
+}
+
+/**
+ * @function postUpdateUser
+ * @description 更新用户信息，POST请求，相较于管理员的更新，此接口没有积分修改
+ * @param {Object} data 用户数据
+ * @example data = {
+ *   detail: "",
+ *   email: "",
+ *   gender: "",
+ *   id: "",
+ *   name: "",
+ *   phone: "",
+ *   portrait: "",
+ *   role: 0,
+ *   username: ""
+ * }
+ * */
+export const postUpdateUser = async (data= {
+  detail: "",
+  email: "",
+  gender: "",
+  id: "",
+  name: "",
+  phone: "",
+  portrait: "",
+  role: 0,
+  username: ""
+}) => {
+  const reqUrl = `${store.getters.getApiServer}/user/update`
+  if (data.id === '' || data.id === undefined) { return Promise.reject(new Error("请求参数不能为空")) }
+
+  const res = await Network.fetchPost(reqUrl, { token: UserStorages.getToken() }, data);
+
+  if (res.status === 200) {
+    return res.json();
+  } else {
+    res.text()
+      .then(text => {
+        if (text !== undefined) {
+          text = text.toString()
+          return Promise.reject(new Error(text));
+        }
+      })
   }
 }

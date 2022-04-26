@@ -33,7 +33,11 @@
           </div>
 
           <div class="user-information block bg-white p-5 top-0.5 translate-y-1">
-            <div class="px-6 h-12 border-b">我的钱包</div>
+            <div class="px-6 h-12 border-b">
+              我的钱包
+              <span class="mx-2">-</span>
+              <span class="text-gray-400">{{ userProfile.id }}</span>
+            </div>
             <div class="px-6">
               <ul class="flex justify-around overflow-hidden">
                 <li>
@@ -103,6 +107,7 @@ watch(() => store.state.userProfile, (newVal) => {
   userProfile.name = newVal.name
   userProfile.role = newVal.role
   userProfile.portrait = newVal.portrait
+  userProfile.id = newVal.id
 }, {immediate: true, deep: true})
 
 watch(() => store.state.userInfo, (newVal) => {

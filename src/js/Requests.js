@@ -2,6 +2,10 @@
  * 此文件为API调用封装，请从此处调用API。
  * */
 
+/**
+ * Imports
+ * */
+
 import {
   postLogin,
   getPhoneAvailability,
@@ -11,12 +15,35 @@ import {
 } from '@/js/Utilities/RequestsAccount'
 
 import {
+  getNoticeList,
   getUserBalance,
   getUserCoupon,
   getUserCredit,
   getUserSignIn,
-  postUserRecharge
+  postUserRecharge,
+  postUpdateUser
 } from "@/js/Utilities/RequestsUser"
+
+import {
+  getUserCreditsUse,
+  postCreateBill,
+  postShowBill
+} from "@/js/Utilities/RequestPurchase"
+
+import {
+  getActivityPush,
+  deleteUser,
+  postCouponCreate,
+  postUpdateUserAdmin
+} from "@/js/Utilities/RequestAdmin"
+
+import {
+  postImage
+} from "@/js/Utilities/RequestFiles"
+
+/**
+ * Exports
+ * */
 
 /**
  * @const users
@@ -34,5 +61,24 @@ export const UserInfoApi = {
   getUserCredit,
   getUserCoupon,
   getUserSignIn,
-  postUserRecharge
+  postUserRecharge,
+  getNoticeList,
+  postUpdateUser
+}
+
+export const PurchaseApi = {
+  postCreateBill,
+  postShowBill,
+  getUserCreditsUse
+}
+
+export const AdminApi = {
+  getActivityPush,
+  deleteUser,
+  postCouponCreate,
+  postUpdateUserAdmin
+}
+
+export const FilesApi = {
+  postImage
 }

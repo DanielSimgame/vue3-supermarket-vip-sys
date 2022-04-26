@@ -44,6 +44,7 @@
               :value="pageData.notificationCount"
               :max="10"
               :hidden="pageData.notificationCount === 0"
+              @click="store.state.app.dialogVisibility.notification = true"
               class="item mr-5"
               type="primary">
             <button
@@ -84,10 +85,12 @@
                   <span :class="['block px-4 py-2 text-sm text-gray-700 cursor-default']">{{ userProfile.name }}</span>
                 </MenuItem>
                 <MenuItem v-slot="{ active }" v-if="userProfile.role === 1">
-                  <a href="#" :class="[active ? 'bg-gray-100' : '', 'cursor-pointer block px-4 py-2 text-sm text-gray-700']">后台管理</a>
+                  <a @click="onAdminClick"
+                     :class="[active ? 'bg-gray-100' : '', 'cursor-pointer block px-4 py-2 text-sm text-gray-700']">后台管理</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <a href="#" :class="[active ? 'bg-gray-100' : '', 'cursor-pointer block px-4 py-2 text-sm text-gray-700']">个人设置</a>
+                  <a @click="onProfileClick"
+                     :class="[active ? 'bg-gray-100' : '', 'cursor-pointer block px-4 py-2 text-sm text-gray-700']">个人资料</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <a @click="onLogoutClick"
@@ -171,6 +174,26 @@ const handleLogout = () => {
   store.commit('isLoggedIn', false)
   User.delToken()
   User.delUserInfoInSession()
+}
+
+/**
+ * @function onAdminClick
+ * @description 后台管理
+ * */
+const onAdminClick = () => {
+  if (userProfile.role === 1) {
+    router.push({name: "admin"})
+  } else {
+    Notification.Notify("您没有权限访问此链接", {type: "error"})
+  }
+}
+
+/**
+ * @function onProfileClick
+ * @description 个人资料
+ * */
+const onProfileClick = () => {
+  router.push('/my-profile')
 }
 
 /**

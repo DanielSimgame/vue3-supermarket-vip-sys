@@ -15,7 +15,8 @@
               <h1 class="cash-icon text-9xl font-black">¥</h1>
               <span>会员卡余额充值</span>
               <h1 class="text-2xl mt-5">当前余额</h1>
-              <h1 class="text-5xl font-bold">{{ pageData.balance }}</h1>
+              <h1 :class="[parseFloat(pageData.balance) >= 10000 ? 'text-5xl' : 'text-4xl', 'font-bold']">{{ pageData.balance === 0 ? '加载中' : pageData.balance }}</h1>
+              <h1 class="text-2xl mt-2">元</h1>
             </div>
           </div>
         </div>
@@ -99,7 +100,7 @@ const store = useStore()
 let pageData = reactive({
   userNickname: '',
   userId: '',
-  balance: 0.0,
+  balance: '0.0',
   rechargeLoading: false,
   agreement: false,
 })
@@ -160,6 +161,9 @@ watch(() => store.state.userProfile, (newVal) => {
 
 watch(() => store.state.userInfo, (newVal) => {
   pageData.balance = newVal.balance
+  if (newVal.balance >= 10000) {
+    pageData.balance = (newVal.balance / 10000).toFixed(1) + '万'
+  }
 }, {immediate: true, deep: true})
 
 </script>
