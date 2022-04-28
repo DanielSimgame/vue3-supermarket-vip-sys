@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50">
+  <div class="bg-gray-50 pb-32">
     <div class="head-banner__boundary overflow-hidden">
       <div class="head-banner__container">
         <img class="mx-auto" :src="bannerImg" alt="充值消费">

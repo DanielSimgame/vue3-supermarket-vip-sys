@@ -72,7 +72,6 @@ const pageInitial = async () => {
         })
     UserInfoApi.getUserCredit()
         .then(res => {
-          console.log('getUserCredit', res)
           store.commit('setUserCredits', parseInt(res))
         })
         .catch(err => {

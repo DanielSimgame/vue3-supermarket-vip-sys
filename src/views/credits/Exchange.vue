@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 background-wrap">
+  <div class="bg-gray-50 pb-24 background-wrap">
     <div class="head-banner__boundary overflow-hidden">
       <div class="head-banner__container">
         <img class="mx-auto" :src="bannerImg" alt="积分兑换">
@@ -28,7 +28,8 @@
           >
             <el-table-column prop="name" label="优惠券名称" fixed="left" width="180"/>
             <el-table-column prop="description" label="优惠券描述" width="230"/>
-            <el-table-column prop="discountAmount" sortable label="优惠额度(¥)" width="120"/>
+            <el-table-column prop="exchangeScore" sortable label="所需积分" width="120"/>
+            <el-table-column prop="discountAmount" sortable label="优惠额度(¥)" width="150"/>
             <el-table-column prop="limitAmount" sortable label="使用门槛(¥)" width="130"/>
             <el-table-column prop="id" label="优惠券ID" width="200"/>
             <el-table-column prop="overdueDate" sortable label="过期时间" width="180"/>
@@ -85,7 +86,7 @@ let pageData = reactive({
  * @param {object} row
  * */
 const handleExchange = (index, row) => {
-  console.log(index, row)
+  // console.log(index, row)
   PurchaseApi.getCreditsExchangeCoupon(row.id)
       .then(res => {
         if (res.search("兑换成功") === 0) {
@@ -107,6 +108,7 @@ const handleExchange = (index, row) => {
 UserInfoApi.getExchangeableCoupons()
     .then(res => {
       pageData.availableCoupons = res
+      // console.log('availableCoupons', res)
     })
     .catch(err => {
       Notification.Notify(err, {
@@ -135,7 +137,7 @@ watch(() => store.state.userInfo, (newVal) => {
   max-width: 1200px;
 }
 
-.background-wrap {
-  min-height: 1200px;
-}
+/*.background-wrap {*/
+/*  min-height: 1200px;*/
+/*}*/
 </style>

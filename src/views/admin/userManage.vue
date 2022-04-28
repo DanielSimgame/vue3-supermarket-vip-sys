@@ -1,5 +1,4 @@
 <template>
-<!--  59c6a741-ba92-4197-94c9-6e0535d8dbc3-->
   <div class="users-container px-5">
     <h1 class="text-2xl italic mb-5">用户管理</h1>
     <el-input
@@ -54,10 +53,13 @@ const onDeleteUserClick = () => {
   if (deleteUserValidation()) {
     AdminApi.deleteUser(pageData.deleteUserId)
         .then(res => {
-          Notification.Notify('删除用户成功', {type: 'success', title: '成功'});
-          pageData.isBtnLoading = false;
+          Notification.Notify(res, {type: 'success', title: '成功'});
+        })
+        .catch(err => {
+          Notification.Notify(err, {type: 'error', title: '失败'});
         })
   }
+  pageData.isBtnLoading = false;
 }
 </script>
 

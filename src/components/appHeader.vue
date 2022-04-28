@@ -24,8 +24,8 @@
           </div>
 
           <div class="hidden sm:block sm:ml-6">
-            <div class="flex space-x-4">
-<!--            <div class="flex space-x-4" v-if="pageData.isLoggedIn">-->
+<!--            <div class="flex space-x-4">-->
+            <div class="flex space-x-4" v-if="pageData.isLoggedIn">
               <router-link
                   v-for="item in navigation"
                   :key="item.name"

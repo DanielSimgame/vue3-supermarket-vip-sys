@@ -6,7 +6,7 @@
       </div>
     </div>
 
-    <div class="container mx-auto p-5 grid grid-cols-2 gap-10">
+    <div class="container mx-auto py-5 grid grid-cols-2 gap-10">
 
       <div class="create-bill col-span-1">
         <h1 class="text-center text-2xl my-5">创建消费账单</h1>
