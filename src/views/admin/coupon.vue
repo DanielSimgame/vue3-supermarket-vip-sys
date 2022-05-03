@@ -56,17 +56,19 @@
               :active-icon="Check"
               :inactive-icon="Close"
           />
-          <el-collapse-transition>
-            <div v-if="pageData.isForExactUser">
-              <el-form-item label="用户ID">
-                <el-input
-                    v-model="pageData.newCoupon.userId"
-                    placeholder="要单独发放到的用户ID"
-                ></el-input>
-              </el-form-item>
-            </div>
-          </el-collapse-transition>
         </el-form-item>
+        <el-collapse-transition>
+          <div v-if="pageData.isForExactUser">
+            <el-form-item label="用户ID">
+              <el-input
+                  v-model="pageData.newCoupon.userId"
+                  placeholder="要单独发放到的用户ID"
+                  readonly
+              ></el-input>
+              <el-button title="点击打开用户列表选择用户" type="primary" @click="onUserListOpenClick">用户列表</el-button>
+            </el-form-item>
+          </div>
+        </el-collapse-transition>
         <el-collapse-transition>
           <el-form-item label="兑换积分" v-if="!pageData.isForExactUser">
             <el-input
@@ -122,6 +124,10 @@
       </div>
     </div>
 
+    <el-dialog v-model="pageData.isUserListVisible" destroy-on-close draggable width="">
+      <userList @selectedUser="handleSelect"></userList>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -130,12 +136,14 @@ import {reactive, watch} from "vue";
 import {Check, Close} from '@element-plus/icons-vue';
 import Notification from "@/js/Utilities/Notification";
 import {AdminApi} from "@/js/Requests";
+import UserList from "@/views/admin/userList.vue";
 
 let today = new Date().valueOf();
 let tomorrow = new Date(today + 24 * 60 * 60 * 1000).valueOf();
 
 let pageData = reactive({
   isSubmitBtnLoading: false,
+  isUserListVisible: false,
   isDeleteBtnLoading: false,
   isForExactUser: false,
   isSelectDateChange: false,
@@ -151,6 +159,14 @@ let pageData = reactive({
   },
   deleteCouponId: null,
 });
+
+const handleSelect = (arg) => {
+  // console.log(arg)
+  if (arg !== "" || arg !== null) {
+    pageData.newCoupon.userId = arg
+    pageData.isUserListVisible = false
+  }
+}
 
 const couponValidation = () => {
   if (pageData.newCoupon.name === null || pageData.newCoupon.name === '') {
@@ -240,6 +256,10 @@ const onCouponDelete = () => {
           pageData.isDeleteBtnLoading = false
         })
   }
+}
+
+const onUserListOpenClick = () => {
+  pageData.isUserListVisible = true
 }
 
 watch(() => pageData.selectedDate, (newVal) => {

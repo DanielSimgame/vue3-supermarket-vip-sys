@@ -159,3 +159,26 @@ export const deleteCoupon = async (couponId) => {
       })
   }
 }
+
+/**
+ * @function getUserList
+ * @description 列出用户列表
+ * @param {Number} pageNum
+ * @param {Number} pageSize
+ * */
+export const getUserList = async (pageNum= 0, pageSize= 10) => {
+  const reqUrl = `${store.getters.getApiServer}/user/listUser?pageNum=${pageNum}&pageSize=${pageSize}`
+
+  const res = await Network.fetchGet(reqUrl, {token: UserStorages.getToken()});
+  if (res.status === 200) {
+    return res.json();
+  } else {
+    res.text()
+        .then(text => {
+          if (text !== undefined) {
+            text = text.toString()
+            return Promise.reject(new Error(text));
+          }
+        })
+  }
+}

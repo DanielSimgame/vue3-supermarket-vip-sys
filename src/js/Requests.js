@@ -35,7 +35,9 @@ import {
   getActivityPush,
   deleteUser,
   postCouponCreate,
-  postUpdateUserAdmin, deleteCoupon
+  postUpdateUserAdmin,
+  deleteCoupon,
+  getUserList
 } from "@/js/Utilities/RequestAdmin"
 
 // import {
@@ -79,7 +81,8 @@ export const AdminApi = {
   deleteUser,
   postCouponCreate,
   postUpdateUserAdmin,
-  deleteCoupon
+  deleteCoupon,
+  getUserList
 }
 
 // export const FilesApi = {
